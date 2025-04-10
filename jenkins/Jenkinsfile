@@ -7,7 +7,11 @@ pipeline {
                 deleteDir()
             }
         }
-
+        stage("Clone repo") {
+            steps {
+                sh "git clone https://github.com/nickolanaous/gosample.git"
+            }
+        }
         stage("Build App") {
             steps {
                 dir("gosample") {
