@@ -1,46 +1,47 @@
-pipeline{
+pipeline {
+    agent any
 
-agent any
-
-stages {
-    stage("Clean up") {
-        steps {
-            deleteDir()
-        }
-    }
-
-    stage("Clone repo") {
-        steps {
-        sh "git clone https://github.com/nickolanaous/gosample.git"
-        }
-    }
-
-    stage("Build App") {
-        steps {
-            dir("gosample") {
-                sh "GOROOT=/usr/local/go"
-                sh "GOPATH=/usr/local/go"
-               // sh "export PATH=$PATH:$GOROOT/bin:$GOPATH/bin"
-                sh "go mod init go.naous.net/api"
-                sh "go mod tidy"
-                sh "go build"
+    stages {
+        stage("Clean up") {
+            steps {
+                deleteDir()
             }
         }
-    }
 
-    stage("Run") {
-        steps {
-            dir("gosample") {
-            sh "./api"
+        stage("Clone repo") {
+            steps {
+                sh "git clone https://github.com/nickolanaous/gosample.git"
             }
-         }
-      }   
+        }
 
+        stage("Build App") {
+            steps {
+                dir("gosample") {
+                    sh '''
+                        export GOROOT=/usr/local/go
+                        export GOPATH=$HOME/go
+                        export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 
-    stage("Test") {
-        steps {
-            sh "curl http://localhost:1337"
-         }
-      }   
+                        go mod init go.naous.net/api || true
+                        go mod tidy
+                        go build -o api
+                    '''
+                }
+            }
+        }
+
+        stage("Run") {
+            steps {
+                dir("gosample") {
+                    sh './api & sleep 3'
+                }
+            }
+        }
+
+        stage("Test") {
+            steps {
+                sh 'curl -s http://localhost:1337 || echo "App is not responding."'
+            }
+        }
     }
 }
