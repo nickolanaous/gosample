@@ -1,2 +1,6 @@
+.gitignore
 api
 tests
+api.db
+go.mod
+go.sum
