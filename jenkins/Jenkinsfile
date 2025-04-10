@@ -44,7 +44,7 @@ pipeline {
 
         stage("Test") {
             steps {
-                sh 'curl -s http://localhost:1337 || echo "App is not responding."'
+                sh 'curl -s http://localhost:1337/events || echo "App is not responding."'
             }
         }
     }
