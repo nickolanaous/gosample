@@ -28,7 +28,7 @@ pipeline {
                         go mod init go.naous.net/api || true
                         go mod tidy
                         go build -o api
-                        echo "Build completed!!"
+                        echo "Build completed!!!"
                     '''
                 }
             }
