@@ -1,0 +1,41 @@
+pipeline{
+
+agent any
+
+stages {
+    stage("Clean up") {
+        steps {
+            deleteDir()
+        }
+    }
+
+    stage("Clone repo") {
+        steps {
+        sh "git clone https://github.com/nickolanaous/gosample.git"
+        }
+    }
+
+    stage("Build App") {
+        steps {
+            dir("gosample") {
+                sh "go build"
+            }
+        }
+    }
+
+    stage("Run") {
+        steps {
+            dir("gosample") {
+            sh "./api"
+            }
+         }
+      }   
+
+
+    stage("Test") {
+        steps {
+            sh "curl http://localhost:1337"
+         }
+      }   
+    }
+}
