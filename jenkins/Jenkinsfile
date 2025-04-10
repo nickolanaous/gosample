@@ -18,6 +18,8 @@ stages {
     stage("Build App") {
         steps {
             dir("gosample") {
+                sh "go mod init"
+                sh "go mod tidy"
                 sh "go build"
             }
         }
